@@ -24,7 +24,7 @@ let multer = require('multer');
 const upload = multer({ dest: "uploads/" });
 const fs = require('fs');
 var mysql = require('mysql');
-const { Sequelize } = require('sequelize');
+const { Sequelize} = require('sequelize');
 const sequelize = require('./utils/database.cjs');
 sequelize.authenticate().then(() => {
     console.log('Connection has been established successfully.');
@@ -33,7 +33,7 @@ sequelize.authenticate().then(() => {
  });
 //To create the database.
 //Uncomment this if you want to drop the entire db and reinitiate
-// sequelize.sync({force:true})
+//sequelize.sync({force:true})
 sequelize.sync()
 // parse application/json
 app.use(bodyParser.json());                        
@@ -216,8 +216,16 @@ app.get('/database/:id', async(req,res)=>{
 });
 
 //To get all the files 
-app.get('/files', async(req,res)=>{
-    return await videoandmeta.findAll().then(function (videometa) {
+app.get('/files/:page', async(req,res)=>{
+        const page = parseInt(req.params['page']);
+        console.log(page)
+        return await videoandmeta.findAll(
+            {where: 
+                {}, order: [
+                    ['updatedAt', 'DESC']
+                  ],offset :((page - 1) * 10),limit:10
+
+            }).then(function (videometa) {
         if(!videometa){
             res.status(400).send('None found');
         }else{
