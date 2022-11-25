@@ -76,7 +76,10 @@ DB_DATABASENAME=eladr
 ```
 ```
 ## To run the script run:
-node app.js
+Install pm2 version 5.2.2
+npm install pm2 -g
+pm2 start process.json
+pm2 log
 ```
 
 ```
