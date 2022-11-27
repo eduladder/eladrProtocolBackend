@@ -27,7 +27,7 @@ curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 # Restart the temainal when the command successfully executed.
 ```
 ```
- nvm install --lts
+ nvm install 16.18.0
  node --version
 ```
 * Install and Setup MySql by the following commands:
