@@ -17,13 +17,12 @@ import * as IPFS from 'ipfs-core'
 // Imported from models/videometa.cjs
 import videoandmeta from "./models/videometa.cjs";
 const ipfs = await IPFS.create();
-//let ipfs2 = require('ipfs-api')({host: "localhost", port: 8080, protocol: "http"});
 const BufferList = require('bl');
 const CID = require('cids');
 let multer = require('multer');
 const upload = multer({ dest: "uploads/" });
 const fs = require('fs');
-var mysql = require('mysql');
+//var mysql = require('mysql');
 const { Sequelize} = require('sequelize');
 const sequelize = require('./utils/database.cjs');
 sequelize.authenticate().then(() => {
@@ -233,6 +232,25 @@ app.get('/files/:page', async(req,res)=>{
         }
     });
 });
+
+//To get all the files 
+app.get('/myfiles/:address/:page', async(req,res)=>{
+    const address = req.params['address'];
+    const page = parseInt(req.params['page']);
+    console.log(page,address);
+    return await videoandmeta.findAll(
+        {where: 
+            {wallet:address}, order: [
+                ['updatedAt', 'DESC']
+              ],offset :((page - 1) * 10),limit:10
+        }).then(function (videometa) {  
+    if(!videometa){
+        res.status(400).send('None found');
+    }else{
+        res.status(200).send(videometa);
+    }
+});
+}); 
 
 //To search in the db
 app.post('/search/:searchTerm', async(req,res)=>{
