@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 // Express Initialize
 const app = express();
 const port = process.env.PORT;
+const hport = process.env.HPORT;
 //For parsing a page
 const axios = require("axios");
 const cheerio = require("cheerio");
@@ -44,6 +45,16 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
+
+const privateKey = fs.readFileSync('/home/arun/Desktop/eladrprotocol/backend/keys/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/home/arun/Desktop/eladrprotocol/backend/keys/cert.pem', 'utf8');
+const ca = fs.readFileSync('/home/arun/Desktop/eladrprotocol/backend/keys/chain.pem', 'utf8');
+
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
 
 //To get hello world page
 app.get('/eladr', (req,res)=>{
@@ -267,8 +278,12 @@ app.post('/search/:searchTerm', async(req,res)=>{
     });
 });
 
+
 //TO console out which page it is listening to.
 app.listen(port,()=> {
     console.log('listen port',process.env.PORT);
 })
 
+app.listen(hport,()=> {
+    console.log('listen port',hport);
+})
